@@ -84,7 +84,34 @@
       // The main difference from fetchOne() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchAll() {
-        // TODO
+        // given endpoint - get from document
+        let endpoint = document.getElementById("endpoint").value;
+
+        // fetch the data - GET request
+        fetch(endpoint, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(
+          function(response) {
+            // if status code is not 200 (OK), return
+            if (response.status !== 200) {
+              console.log('Looks like there was a problem in fetchAll(). Status Code: ' +
+                response.status);
+              return;
+            }
+            // get data from response, place in output, must stringify to get string from object
+            response.json().then(function(data) {
+              document.getElementById("output").textContent = JSON.stringify(data);
+            });
+          }
+        )
+        // if endpoint returns an error, catch it and place it in the output field? is this correct?
+        .catch(function(err) {
+          console.log('Fetch Error :-S', err);
+        });
       }
 
       // This function should fetch one entry from the given endpoint.
@@ -92,23 +119,147 @@
       // The main difference from fetchAll() will be the URL you request from; check
       // the writeup to view the URL pattern for fetch one and fetch all
       function fetchOne() {
-        // TODO
+        // given endpoint - get from document
+        let endpoint = document.getElementById("endpoint").value;
+
+        // get id of entry to get using prompt
+        let id = window.prompt("Enter record id");
+
+        // fetch the data - GET request on one id
+        fetch(endpoint + '/' + id, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(
+          function(response) {
+            // if status code is not 200 (OK), return
+            if (response.status !== 200) {
+              console.log('Looks like there was a problem in fetchOne(). Status Code: ' +
+                response.status);
+              return;
+            }
+            // get data from response, place in output, must stringify to get string from object
+            response.json().then(function(data) {
+              document.getElementById("output").textContent = JSON.stringify(data);
+            });
+          }
+        )
+        // if endpoint returns an error, catch it and place it in the output field? is this correct?
+        .catch(function(err) {
+          console.log('Fetch Error :-S', err);
+        });
       }
 
       // This function should use fetch to create one entry in the given endpoint.
       // From the 4 CRUD actions, this is the CREATE action, and uses the POST http method.
       // The main difference from updateRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function createRecord() {
-        // TODO
+      function createRecord(type) {
+        // given endpoint - get from document
+        let endpoint = document.getElementById("endpoint").value;
+
+        // show the inputs to create a new entry
+        if (type === 'show') {
+          document.getElementById("recordForm").style.display = 'inline';
+        }
+
+        // submit new entry
+        if (type === 'submit') {
+          // get title and author for this entry
+          let inputTitle = document.getElementById('title').value;
+          let inputAuthor = document.getElementById('author').value;
+
+          // new entry
+          const entry = {
+            title: inputTitle,
+            author: inputAuthor,
+          };
+
+          // create new data - POST request 
+          fetch(endpoint, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(entry),
+          })
+          .then(
+            function(response) {
+              // if status code is not 201 (CREATED), return
+              if (response.status !== 201) {
+                console.log('Looks like there was a problem in createRecord(). Status Code: ' +
+                  response.status);
+                return;
+              }
+              // place newly created entry in output
+              response.json().then(function(data) {
+                document.getElementById("output").textContent = JSON.stringify(data);
+              });
+            }
+          )
+          // if endpoint returns an error, catch it and place it in the output field? is this correct?
+          .catch(function(err) {
+            console.log('Fetch Error :-S', err);
+          });
+        }
       }
 
       // This function should use fetch to update one existing entry in the given endpoint.
       // From the 4 CRUD actions, this is the UPDATE action, and uses the PUT http method.
       // The main difference from createRecord() will be the URL you send data to; check
       // the writeup to view the URL pattern for create and update
-      function updateRecord() {
-        // TODO
+      function updateRecord(type) {
+        // given endpoint - get from document
+        let endpoint = document.getElementById("endpoint").value;
+
+        // show the inputs to update existing entry
+        if (type === 'show') {
+          document.getElementById("recordForm").style.display = 'inline';
+          document.getElementById("recordIDcontainer").style.display = 'inline';
+        }
+        
+        // submit update to existing entry
+        if (type === 'submit') {
+          // get title, author, and record id for this entry
+          let inputTitle = document.getElementById('title').value;
+          let inputAuthor = document.getElementById('author').value;
+          let inputId = document.getElementById('recordID').value;
+
+          // updated entry
+          const entry = {
+            title: inputTitle,
+            author: inputAuthor,
+          };
+
+          // update the data at correct id - PUT request 
+          fetch(endpoint + '/' + inputId, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(entry),
+          })
+          .then(
+            function(response) {
+              // if status code is not 200 (OK), return
+              if (response.status !== 200) {
+                console.log('Looks like there was a problem in updateRecord(). Status Code: ' +
+                  response.status);
+                return;
+              }
+              // place newly created entry in output
+              response.json().then(function(data) {
+                document.getElementById("output").textContent = JSON.stringify(data);
+              });
+            }
+          )
+          // if endpoint returns an error, catch it and place it in the output field? is this correct?
+          .catch(function(err) {
+            console.log('Fetch Error :-S', err);
+          });
+        }
       }
 
       // This function should use fetch to delete one existing entry in the given endpoint.
@@ -117,7 +268,37 @@
       // request; check the writeup to view the URL pattern for get one and delete. THERE IS NO 
       // delete all, only delete one.
       function deleteRecord() {
-        // TODO
+        // given endpoint - get from document
+        let endpoint = document.getElementById("endpoint").value;
+
+        // get id of entry to delete using prompt
+        let id = window.prompt("Enter record id");
+
+        // fetch the data - DELETE request on one id
+        fetch(endpoint + '/' + id, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        .then(
+          function(response) {
+            // if status code is not 200 (OK), return
+            if (response.status !== 200) {
+              console.log('Looks like there was a problem in deleteRecord(). Status Code: ' +
+                response.status);
+              return;
+            }
+            // get data from response, place in output, must stringify to get string from object
+            response.json().then(function(data) {
+              document.getElementById("output").textContent = JSON.stringify(data);
+            });
+          }
+        )
+        // if endpoint returns an error, catch it and place it in the output field? is this correct?
+        .catch(function(err) {
+          console.log('Fetch Error :-S', err);
+        });
       }
 
       window.addEventListener('DOMContentLoaded', () => {
@@ -127,6 +308,10 @@
           .addEventListener("submit", event => {
             event.preventDefault();
             let command = document.getElementById('action').value;
+
+            // remove displayed content before each new request
+            document.getElementById("output").textContent = null;
+            document.getElementById("recordForm").style.display = 'none';
 
             switch (command) {
               case "List All":

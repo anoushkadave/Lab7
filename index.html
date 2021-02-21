@@ -97,9 +97,9 @@
         .then(
           function(response) {
             // if status code is not 200 (OK), return
-            if (response.status !== 200) {
-              console.log('Looks like there was a problem in fetchAll(). Status Code: ' +
-                response.status);
+            if (response.ok == false) {
+              console.log('Looks like there was a problem in fetchAll(). Status Code: ' + response.status);
+              document.getElementById("output").textContent = 'Status Code: ' + response.status;
               return;
             }
             // get data from response, place in output, must stringify to get string from object
@@ -108,9 +108,10 @@
             });
           }
         )
-        // if endpoint returns an error, catch it and place it in the output field? is this correct?
+        // if endpoint returns an error, catch it and place it in the output field
         .catch(function(err) {
           console.log('Fetch Error :-S', err);
+          document.getElementById("output").textContent = err;
         });
       }
 
@@ -135,9 +136,16 @@
         .then(
           function(response) {
             // if status code is not 200 (OK), return
-            if (response.status !== 200) {
-              console.log('Looks like there was a problem in fetchOne(). Status Code: ' +
-                response.status);
+            if (response.ok == false) {
+              console.log('Looks like there was a problem in fetchOne(). Status Code: ' + response.status);
+              // not found error
+              if (response.status == 404) {
+                document.getElementById("output").textContent = 'Status Code: ' + response.status + ' (ID Not Found)';
+              }
+              // other error
+              else {
+                document.getElementById("output").textContent = 'Status Code: ' + response.status;
+              }
               return;
             }
             // get data from response, place in output, must stringify to get string from object
@@ -146,9 +154,10 @@
             });
           }
         )
-        // if endpoint returns an error, catch it and place it in the output field? is this correct?
+        // if endpoint returns an error, catch it and place it in the output field
         .catch(function(err) {
           console.log('Fetch Error :-S', err);
+          document.getElementById("output").textContent = err;
         });
       }
 
@@ -189,8 +198,8 @@
             function(response) {
               // if status code is not 201 (CREATED), return
               if (response.status !== 201) {
-                console.log('Looks like there was a problem in createRecord(). Status Code: ' +
-                  response.status);
+                console.log('Looks like there was a problem in createRecord(). Status Code: ' + response.status);
+                document.getElementById("output").textContent = 'Status Code: ' + response.status;
                 return;
               }
               // place newly created entry in output
@@ -202,6 +211,7 @@
           // if endpoint returns an error, catch it and place it in the output field? is this correct?
           .catch(function(err) {
             console.log('Fetch Error :-S', err);
+            document.getElementById("output").textContent = err;
           });
         }
       }
@@ -245,8 +255,15 @@
             function(response) {
               // if status code is not 200 (OK), return
               if (response.status !== 200) {
-                console.log('Looks like there was a problem in updateRecord(). Status Code: ' +
-                  response.status);
+                console.log('Looks like there was a problem in updateRecord(). Status Code: ' + response.status);
+                // not found error
+                if (response.status == 404) {
+                  document.getElementById("output").textContent = 'Status Code: ' + response.status + ' (ID Not Found)';
+                }
+                // other error
+                else {
+                  document.getElementById("output").textContent = 'Status Code: ' + response.status;
+                }
                 return;
               }
               // place newly created entry in output
@@ -258,6 +275,7 @@
           // if endpoint returns an error, catch it and place it in the output field? is this correct?
           .catch(function(err) {
             console.log('Fetch Error :-S', err);
+            document.getElementById("output").textContent = err;
           });
         }
       }
@@ -284,9 +302,16 @@
         .then(
           function(response) {
             // if status code is not 200 (OK), return
-            if (response.status !== 200) {
-              console.log('Looks like there was a problem in deleteRecord(). Status Code: ' +
-                response.status);
+            if (response.ok == false) {
+              console.log('Looks like there was a problem in deleteRecord(). Status Code: ' + response.status);
+              // not found error
+              if (response.status == 404) {
+                document.getElementById("output").textContent = 'Status Code: ' + response.status + ' (ID Not Found)';
+              }
+              // other error
+              else {
+                document.getElementById("output").textContent = 'Status Code: ' + response.status;
+              }
               return;
             }
             // get data from response, place in output, must stringify to get string from object
@@ -298,6 +323,7 @@
         // if endpoint returns an error, catch it and place it in the output field? is this correct?
         .catch(function(err) {
           console.log('Fetch Error :-S', err);
+          document.getElementById("output").textContent = err;
         });
       }
 
